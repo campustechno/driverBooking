@@ -3,6 +3,8 @@ import { useReducer } from 'react';
 import { initialState, reducer,  GlobalState} from './middlewares/global-states';
 import User from "./pages/User";
 import Navbar from './components/Navbar';
+import 'mapbox-gl/dist/mapbox-gl.css';
+
 // import Driver from "./pages/Driver";
 
 

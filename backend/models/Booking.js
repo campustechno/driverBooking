@@ -11,19 +11,7 @@ const bookingSchema = new mongoose.Schema({
     ref: 'Driver',
     required: true
   },
-  startTime: {
-    type: Date,
-    required: true
-  },
-  endTime: {
-    type: Date,
-    required: true
-  },
   pickupLocation: {
-    type: String,
-    required: true
-  },
-  dropoffLocation: {
     type: String,
     required: true
   },

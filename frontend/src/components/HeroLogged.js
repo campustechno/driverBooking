@@ -24,12 +24,8 @@ const Hero = () => {
     }, []);
 
     //opens sign up modal
-    const openSignupModal = () => {
-        dispatch({ type: "FIRE_MODAL", payload: "SIGNUP" })
-    }
-
-    const openLoginModal = () => {
-        dispatch({ type: "FIRE_MODAL", payload: "LOGIN" })
+    const openBookingModal = () => {
+        dispatch({ type: "FIRE_MODAL", payload: "BOOKING" })
     }
 
     return (
@@ -38,8 +34,7 @@ const Hero = () => {
                 <h1 className="text-4xl font-bold text-blackk">Find your perfect driver in city</h1>
                 <p className="my-8 text-2xl">Safest car driver in Kolkata</p>
                 <div className="space-x-4">
-                    <button className="btn bg-secondary" onClick={openSignupModal}>Sign Up</button>
-                    <button className="btn bg-primary" onClick={openLoginModal}>Log In</button>
+                    <button className="btn bg-secondary" onClick={openBookingModal}>Book Now</button>
                 </div>
             </div>
             <div className="max-w-sm w-fit h-fit" ref={heroContainer} key="hero-animation">
