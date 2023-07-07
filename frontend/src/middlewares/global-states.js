@@ -7,7 +7,6 @@ export const initialState = {
     activeModal:"",
     loggedIn : false,
     loggedUser : {},
-    currentChat:{}
 }
 
 export const reducer = (state, action) => {

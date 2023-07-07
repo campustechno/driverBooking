@@ -5,7 +5,7 @@ const jwt = require('jsonwebtoken');
 
 // User Signup
 const userSignup = asyncHandler(async (req, res) => {
-  const { name, email, password, age, gender } = req.body;
+  const {name, email, password, gender, age} = req.body;
 
   // Check if the user already exists
   const existingUser = await User.findOne({ email });
@@ -16,16 +16,24 @@ const userSignup = asyncHandler(async (req, res) => {
 
   // Create a new user
   const hashedPassword = await bcrypt.hash(password, 10);
+  
   const newUser = new User({
     name,
     email,
     password: hashedPassword,
     age,
-    gender
+    gender, 
   });
+  
   await newUser.save();
-
-  res.status(201).json({ message: 'User created successfully' });
+  const token = jwt.sign({ userId: newUser._id }, process.env.JWT_SECRET_KEY, {
+    expiresIn: '1h' // Token expires in 1 hour
+  });
+  res.status(201).json({
+    name:newUser.name,
+    email:newUser.email,
+    token:token
+  });
 });
 
 // User Login
@@ -51,7 +59,17 @@ const userLogin = asyncHandler(async (req, res) => {
     expiresIn: '1h' // Token expires in 1 hour
   });
 
-  res.status(200).json({ message: 'User login successful', token });
+  res.status(200).json({
+    name:user.name,
+    email:user.email,
+    token:token
+  });
 });
 
-module.exports = { userSignup, userLogin };
+
+const getMe = asyncHandler(async (req, res) => {
+  res.json(req.user);
+})
+
+
+module.exports = { userSignup, userLogin, getMe };

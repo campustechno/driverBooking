@@ -1,8 +1,8 @@
 import React, { useContext, useRef, useEffect } from 'react'
 import Lottie from 'lottie-web';
 
-import { GlobalState } from '../middlewares/global-states'
-const animationData = require('../assets/hero.json');
+import { GlobalState } from '../../middlewares/global-states'
+const animationData = require('../../assets/hero.json');
 
 const Hero = () => {
     const { dispatch } = useContext(GlobalState);

@@ -15,19 +15,40 @@ const getUserBookings = asyncHandler(async (req, res) => {
 
 // Create a Booking for a User
 const createBooking = asyncHandler(async (req, res) => {
-  const userId = req.user._id;
-  const { driverId, startTime, endTime } = req.body;
+  const user = req.user._id;
+  const {location, hours, minutes, amPm,hoursNeeded } = req.body;
 
   // Create a new booking
   const newBooking = new Booking({
-    userId,
-    driverId,
-    startTime,
-    endTime
+    location,user, hours, minutes, amPm,hoursNeeded 
   });
   await newBooking.save();
 
-  res.status(201).json(newBooking);
+  res.status(201).json({
+    user: newBooking.user,
+    location: newBooking.location,
+    hours: newBooking.hours,
+    minutes: newBooking.minutes,
+    amPm: newBooking.amPm,
+    hoursNeeded: newBooking.hoursNeeded,
+    status: newBooking.status
+  });
+});
+
+const getUserLastBooking = asyncHandler(async (req, res) => {
+  const user = req.user._id;
+  const lastBooking = await Booking.findOne({ user, status: 'pending' })
+    .sort({ createdAt: -1 })
+    .limit(1)
+    .exec();
+  console.log(lastBooking)
+  if (!lastBooking) {
+    // Handle case where no pending booking is found for the user
+    return res.status(404).json({ message: 'No pending booking found' });
+  }
+
+  // Handle case where pending booking is found
+  res.status(200).json(lastBooking );
 });
 
 
@@ -98,6 +119,13 @@ const updateBookingStatus = asyncHandler(async (req, res) => {
   res.status(200).json({ message: 'Booking status updated successfully' });
 });
 
-module.exports = { getBookingRequests, confirmBooking, updateBookingStatus, getUserBookings,  createBooking  };
+
+const deleteCurrentBooking = asyncHandler(async (req, res) => {
+  const { bookingId } = req.body;
+  const delBooking = await Booking.deleteOne({_id: bookingId});
+  res.status(200).json({message: "Succcessfully deleted"});
+});
+
+module.exports = { getBookingRequests, confirmBooking, updateBookingStatus, getUserBookings,  createBooking, getUserLastBooking, deleteCurrentBooking  };
 
 

@@ -1,7 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import Map, { Marker, GeolocateControl } from 'react-map-gl';
+import mapboxgl from 'mapbox-gl';
+import MapboxGeocoder from '@mapbox/mapbox-sdk/services/geocoding';
 
 const MapContainer = ({onLocationChange}) => {
+  const [address, setAddress] = useState('');
+
+
+
   const [viewport, setViewport] = useState({
     width: '100%',
     height: '400px',
@@ -10,18 +16,52 @@ const MapContainer = ({onLocationChange}) => {
     zoom: 10
   });
 
+  const geocodingClient = MapboxGeocoder({
+    accessToken: process.env.REACT_APP_MAPBOX_ACCESS,
+  });
+
   useEffect(() => {
-    
-  })
+    convertCoordinatesToAddress(viewport.latitude, viewport.longitude);
+  }, [viewport.latitude, viewport.longitude]);
+  
 
-  const [meetPoint, setMeetPoint] = useState(null);
+  useEffect(() => {
+    onLocationChange(address)
+  },[address])
 
-  const handleMapClick = (event) => {
-    const { lngLat } = event;
-    const [longitude, latitude] = lngLat;
-
-    setMeetPoint({ latitude, longitude });
+  const handleViewportChange = (newViewport) => {
+    setViewport(newViewport);
+    const { latitude, longitude } = newViewport;
+    convertCoordinatesToAddress(latitude, longitude);
   };
+  
+
+  const convertCoordinatesToAddress = async (latitude, longitude) => {
+    try {
+      const response = await geocodingClient.reverseGeocode({
+        query: [longitude, latitude],
+        limit: 1,
+      }).send();
+      
+      if (response && response.body && response.body.features.length > 0) {
+        const place = response.body.features[0];
+        const formattedAddress = place.place_name;
+        setAddress(formattedAddress);
+        // console.log(formattedAddress);
+      }
+    } catch (error) {
+      console.log('Error converting coordinates to address:', error);
+    }
+  };
+  
+  // const [meetPoint, setMeetPoint] = useState(null);
+
+  // const handleMapClick = (event) => {
+  //   const { lngLat } = event;
+  //   const [longitude, latitude] = lngLat;
+
+  //   setMeetPoint({ latitude, longitude });
+  // };
 
   return (
     <div className="flex">
@@ -30,9 +70,9 @@ const MapContainer = ({onLocationChange}) => {
         initialViewState={viewport}
         style={{ width: "100%", height: 400, position:"relative" }}
         mapStyle="mapbox://styles/mapbox/streets-v9"
-
+        onMove={evt => handleViewportChange(evt.viewState)}
       >
-        {meetPoint && (
+        {/* {meetPoint && (
           <Marker
             latitude={meetPoint.latitude}
             longitude={meetPoint.longitude}
@@ -51,7 +91,7 @@ const MapContainer = ({onLocationChange}) => {
               height={40}
             />
           </Marker>
-        )}
+        )} */}
         <GeolocateControl positionOptions={{ enableHighAccuracy: true }} trackUserLocation={true} />
       </Map>
       {/* <form>

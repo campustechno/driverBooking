@@ -55,8 +55,8 @@ const Home = () => {
             ) : null}
             <div className="w-full flex flex-col items-center">
                 <div className="relative">
-                    {/* <Hero/> */}
-                    <HeroLogged />
+                    <Hero/>
+                    {/* <HeroLogged /> */}
                     {/* <BookingStatus /> */}
                     {/* <BookingModal/> */}
                     {/* <MapContainer/> */}

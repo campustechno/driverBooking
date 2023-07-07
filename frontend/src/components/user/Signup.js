@@ -1,4 +1,5 @@
 import React, { useContext, useState } from 'react'
+import {Link, useNavigate} from 'react-router-dom'
 import signuplogo from '../../assets/driver.png'
 import { GlobalState } from '../../middlewares/global-states';
 import Cookies from 'js-cookie'
@@ -15,18 +16,17 @@ const Signup = () => {
 
     const [isLoading, setIsLoading] = useState(false);
 
-    // const navigate = useNavigate();
-
+    const navigate = useNavigate();
     const handleSubmit = async (e) => {
         e.preventDefault();
         setIsLoading(true);
 
-        await axios.post(`${process.env.REACT_APP_API_URL}/user/create`, {name, email, password,age,gender})
+        await axios.post(`${process.env.REACT_APP_API_URL}/users/create`, {name:name, email:email, password:password, gender:gender, age})
             .then(res => {
                 Cookies.set("authToken", res.data.token);
-                // console.log(res.data);
+                console.log(res.data);
                 dispatch({ type: "FIRE_MODAL", payload: "" })
-                // navigate('/')
+                navigate('/user')
             })
             .catch(err => alert(err.message))
         setIsLoading(false)

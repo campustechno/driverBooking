@@ -14,7 +14,12 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true
   },
-  // Additional user fields
+  age: {
+    type: Number,
+  },
+  gender: {
+    type: String,
+  }
 });
 
 const User = mongoose.model('User', userSchema);

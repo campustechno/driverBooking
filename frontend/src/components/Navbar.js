@@ -2,22 +2,21 @@ import React, { useContext, useEffect, useState } from 'react'
 import logo from '../assets/driver.png'
 import Cookies from 'js-cookie';
 import { GlobalState } from '../middlewares/global-states';
-import ProfileDropdown from './ProfileDropdown';
 
-const Navbar = ({ userData }) => {
+const Navbar = () => {
     const [currentUser, setCurrentUser] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false)
-    const { dispatch } = useContext(GlobalState)
-
+    const { data, dispatch } = useContext(GlobalState)
+    console.log(data)
     useEffect(() => {
-        setCurrentUser(userData);
-    }, [userData])
+        setCurrentUser(data.loggedUser);
+    }, [data.loggedUser])
 
     // const openProfile = () => {
     //     navigate(`/${currentUser._id}`)
     // }
 
-
+    console.log(currentUser)
     const toggleModal = () => {
         console.log(":dsada")
         setIsModalOpen(!isModalOpen)
@@ -37,7 +36,7 @@ const Navbar = ({ userData }) => {
                     <p className='navbarMenu'>SWITCH TO DRIVER</p>
                     {currentUser && currentUser.name ?
                         <>
-                            <p className='navbarMenu'>CHAT</p>
+                                <p className='navbarMenu' >BOOKINGS</p>
                             <div onClick={() => toggleModal()} className='relative z-50'>
                                 <p className='navbarMenu' >{currentUser.name?.toUpperCase()}</p>
                                 {isModalOpen ?

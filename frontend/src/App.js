@@ -1,8 +1,10 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { useReducer } from 'react';
 import { initialState, reducer,  GlobalState} from './middlewares/global-states';
+import UserProteced from './middlewares/UserProtected'
 import User from "./pages/User";
-import Navbar from './components/Navbar';
+import Home from './pages/Home';
+
 import 'mapbox-gl/dist/mapbox-gl.css';
 
 // import Driver from "./pages/Driver";
@@ -11,13 +13,15 @@ import 'mapbox-gl/dist/mapbox-gl.css';
 function App() {
   const [data, dispatch] = useReducer(reducer, initialState);
 
-
   return (
-    <GlobalState.Provider value={{ data: data, dispatch: dispatch }}>
-      <Navbar/>
-      <User/>
-      {/* <Driver/> */}
-    </GlobalState.Provider>
+    <BrowserRouter>
+      <GlobalState.Provider value={{ data: data, dispatch: dispatch }}>
+        <Routes>
+          <Route path="/" element={<UserProteced><Home/></UserProteced>} />
+          <Route path="/user" element={<UserProteced><User/></UserProteced>} />
+        </Routes>
+      </GlobalState.Provider>
+    </BrowserRouter>
 
   );
 }

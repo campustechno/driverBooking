@@ -21,11 +21,12 @@ const Login = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         setIsLoading(true)
-        await axios.post(`${process.env.REACT_APP_API_URL}/user/verify`, {
+        await axios.post(`${process.env.REACT_APP_API_URL}/users/verify`, {
             email: email,
             password: password
         })
             .then(res => {
+                console.log(res.data.token);
                 Cookies.set("authToken", res.data.token);
                 dispatch({type:"FIRE_MODAL", payload:""})
                 // navigate('/')
